@@ -6,6 +6,9 @@ from datetime import datetime, timezone, timedelta
 
 LIDARR_URL = 'http://192.168.0.107:8686/'
 LIDARR_API_KEY = "0bdd17ecea7844ce8eb0256f5cc9ae99"
+LIDARR_API_URL = f"{LIDARR_URL}/api/v1/"
+
+CLIENT_WHITELIST = ['slskd']
 
 REQUEST_TIMEOUT = 30
 
@@ -13,7 +16,6 @@ PAGE_SIZE = 100
 SEARCH_THRESHOLD_HOURS = 2
 search_threshold = timedelta(hours=SEARCH_THRESHOLD_HOURS)
 
-LIDARR_API_URL = f"{LIDARR_URL}/api/v1/"
 queue_url = LIDARR_API_URL + "queue"
 command_url = LIDARR_API_URL + "command"
 wanted_url = LIDARR_API_URL + "wanted/missing"
@@ -132,6 +134,9 @@ def check_stalled_downloads():
         data = response.json()
 
         for item in data.get('records', []):
+            if str(item.get('downloadClient')).lower() not in CLIENT_WHITELIST:
+                continue
+
             bad_download = item.get('trackedDownloadStatus') == 'warning'
             error = item.get('errorMessage') is not None
             stalled = item.get('timeleft') is None
