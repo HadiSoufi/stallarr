@@ -1,4 +1,5 @@
 import time
+import datetime
 import requests
 import json
 import threading
@@ -224,18 +225,25 @@ def check_and_search_wanted():
     print(f"Wanted queue processed. Searched for {searched} albums.")
 
 
+# Make sure that we're only running during valid working hours
+def valid_time():
+    return datetime.time(2, 0) <= datetime.datetime.now().time() <= datetime.time(7, 0)
+
+
 def stall_thread():
     while True:
+        time.sleep(60)
+        if not valid_time(): continue
         check_stalled_downloads()
         print()
-        time.sleep(60)
 
 
 def wanted_thread():
     while True:
+        time.sleep(60)
+        if not valid_time(): continue
         check_and_search_wanted()
         print()
-        time.sleep(60)
 
 
 def main():
