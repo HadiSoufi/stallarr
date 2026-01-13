@@ -251,8 +251,6 @@ def main():
         print("Error: Please set your LIDARR_URL and LIDARR_API_KEY in the script.")
         return
 
-    print("\nBeginning run.")
-
     t1 = threading.Thread(target=stall_thread)
     t2 = threading.Thread(target=wanted_thread)
 
