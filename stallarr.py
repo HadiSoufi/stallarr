@@ -1,9 +1,8 @@
 import time
-import datetime
 import requests
 import json
 import threading
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timezone, timedelta, time as dt_time
 
 LIDARR_URL = 'http://192.168.0.107:8686/'
 LIDARR_API_KEY = "0bdd17ecea7844ce8eb0256f5cc9ae99"
@@ -227,7 +226,8 @@ def check_and_search_wanted():
 
 # Make sure that we're only running during valid working hours
 def valid_time():
-    return datetime.time(2, 0) <= datetime.datetime.now().time() <= datetime.time(7, 0)
+    print(datetime.now().time())
+    return dt_time(2, 0) <= datetime.now().time() <= dt_time(7, 0)
 
 
 def stall_thread():
@@ -250,6 +250,8 @@ def main():
     if not LIDARR_API_KEY or LIDARR_API_KEY == "YOUR_API_KEY_HERE":
         print("Error: Please set your LIDARR_URL and LIDARR_API_KEY in the script.")
         return
+
+    print("\nBeginning run.")
 
     t1 = threading.Thread(target=stall_thread)
     t2 = threading.Thread(target=wanted_thread)
